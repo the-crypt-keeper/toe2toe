@@ -11,6 +11,9 @@ def play_game(player_x, player_o):
         move = current_player.next_move(state)
         state.make_move(move)
         current_player = player_o if current_player == player_x else player_x
+        
+    print("---- Final State ----")
+    print(state)
 
     return state.get_winner()
 
@@ -40,10 +43,11 @@ if __name__ == "__main__":
     player_ideal = TTTPlayerIdeal('X')  # Initial symbol, will be changed in each game
     player_llm = TTTPlayerLLMJson(
         symbol='O',
-        api_base='http://100.109.96.89:3333/',
-        model_name='gpt-4o-mini-2024-07-18',
+        api_base='http://100.109.96.89:3333/v1/',
+        model_name='Meta-Llama-3.1-8B-Instruct-Q8_0',
         system_prompt="You are an AI playing Tic-Tac-Toe. Respond with valid JSON.",
-        move_template="It's your turn to play. You are '{symbol}'. The current board state is: {board}. Provide your next move as a JSON object with 'thought', 'move_row', and 'move_col' fields."
+        move_template="It's your turn to play. You are '{symbol}'. The current board state is: {board}. Provide your next move as a JSON object with 'thought', 'move_row', and 'move_col' fields.",
+        json_response_mode=False
     )
 
     results = simulate_games(num_games, player_ideal, player_llm)
