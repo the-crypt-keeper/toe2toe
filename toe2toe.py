@@ -50,12 +50,17 @@ def simulate_games(num_games, player1, player2):
 if __name__ == "__main__":
     num_games = 10
     player_ideal = TTTPlayerIdeal()
-    player_llm = TTTPlayerLLMJson(
+    
+    player_llm_0 = TTTPlayerLLMJson(
         api_base='http://100.109.96.89:3333/v1/',
         model_name='Hermes-2-Theta-Llama-3-8B-exl2_65bpw'
     )
+    player_llm_1 = TTTPlayerLLMJson(
+        api_base='http://100.109.96.89:3333/v1/',
+        model_name='gpt-4o-mini-2024-07-18'
+    )
 
-    results = simulate_games(num_games, player_ideal, player_llm)
+    results = simulate_games(num_games, player_llm_0, player_llm_1)
 
     print(f"Results of {num_games} games between TTTPlayerIdeal and TTTPlayerLLMJson:")
     print(f"TTTPlayerIdeal wins: {results['player1']}")
