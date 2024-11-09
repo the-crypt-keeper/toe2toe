@@ -43,7 +43,8 @@ class TTTPlayerLLMJson(TTTPlayer):
         response = openai.ChatCompletion.create(
             model=self.model_name,
             messages=messages,
-            api_base=self.api_endpoint
+            api_base=self.api_endpoint,
+            response_format={"type": "json_object"}
         )
         return response.choices[0].message.content
 
