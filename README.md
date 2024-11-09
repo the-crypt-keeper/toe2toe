@@ -1,4 +1,4 @@
-# Tic-Tac-Toe LLM Evaluation System
+# toe2toe: A Tic-Tac-Toe LLM Evaluation System
 
 This project implements a system to evaluate the ability of large language models (LLMs) to play Tic-Tac-Toe. It provides a framework for testing and comparing different LLM-based players against each other or against an ideal player implementation.
 
@@ -21,8 +21,8 @@ This project implements a system to evaluate the ability of large language model
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/ttt-llm-evaluation.git
-   cd ttt-llm-evaluation
+   git clone https://github.com/the-crypt-keeper/toe2toe.git
+   cd toe2toe
    ```
 
 2. Install the required dependencies:
