@@ -39,4 +39,4 @@ class TTTState:
         return None  # No winner or draw
 
     def __str__(self):
-        return '\n'.join(' '.join(self.board[i:i+3]) for i in range(0, 9, 3))
+        return '\n'.join(' '.join(self.board[i:i+3]).replace('', ' ') for i in range(0, 9, 3))
