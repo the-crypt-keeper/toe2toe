@@ -5,7 +5,7 @@ from ttt_core import TTTState
 from ttt_players import TTTPlayer
 
 class TTTPlayerLLMJson(TTTPlayer):
-    def __init__(self, symbol: str, api_key: str, api_base: str, model_name: str, system_prompt: str, move_template: str):
+    def __init__(self, symbol: str, model_name: str, system_prompt: str, move_template: str, api_base: str, api_key: str = 'x-ignored',):
         super().__init__(symbol)
         self.client = OpenAI(api_key=api_key, base_url=api_base)
         self.model_name = model_name
