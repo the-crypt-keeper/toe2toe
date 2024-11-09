@@ -38,9 +38,13 @@ def simulate_games(num_games, player1, player2):
 if __name__ == "__main__":
     num_games = 10
     player_ideal = TTTPlayerIdeal('X')  # Initial symbol, will be changed in each game
-    player_llm = TTTPlayerLLMJson('O', 'http://100.109.96.89:3333/', 'gpt-4o-mini-2024-07-18', 
-                                  "You are an AI playing Tic-Tac-Toe. Respond with valid JSON.",
-                                  "It's your turn to play. You are '{symbol}'. The current board state is: {board}. Provide your next move as a JSON object with 'thought', 'move_row', and 'move_col' fields.")
+    player_llm = TTTPlayerLLMJson(
+        symbol='O',
+        api_base='http://100.109.96.89:3333/',
+        model_name='gpt-4o-mini-2024-07-18',
+        system_prompt="You are an AI playing Tic-Tac-Toe. Respond with valid JSON.",
+        move_template="It's your turn to play. You are '{symbol}'. The current board state is: {board}. Provide your next move as a JSON object with 'thought', 'move_row', and 'move_col' fields."
+    )
 
     results = simulate_games(num_games, player_ideal, player_llm)
 
