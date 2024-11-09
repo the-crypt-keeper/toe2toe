@@ -50,7 +50,7 @@ if __name__ == "__main__":
         api_base='http://100.109.96.89:3333/v1/',
         model_name='Meta-Llama-3.1-8B-Instruct-Q8_0',
         system_prompt="You are an AI playing Tic-Tac-Toe. Respond with valid JSON.",
-        move_template="It's your turn to play. You are '{symbol}'. The current board state is: {board}. Provide your next move as a JSON object with 'thought', 'move_row' (one of: left, center, right), and 'move_col' (one of: top, middle, bottom) fields.",
+        move_template="It's your turn to play. You are '{symbol}'. The current board state is:\n{board}\nProvide your next move as a JSON object with 'thought', 'move_row' (one of: top, middle, bottom), and 'move_col' (one of: left, center, right) fields.",
         json_response_mode=False
     )
 

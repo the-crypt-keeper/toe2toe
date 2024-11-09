@@ -1,5 +1,4 @@
-import json
-from typing import List
+from typing import List, Tuple
 from openai import OpenAI
 from ttt_core import TTTState
 from ttt_players import TTTPlayer
@@ -19,8 +18,8 @@ class TTTPlayerLLMJson(TTTPlayer):
         self.conversation_history = []
 
     def next_move(self, state: TTTState) -> int:
-        board_json = json.dumps(self._board_to_2d_array(state.board), indent=2)
-        move_prompt = self.move_template.format(symbol=self.symbol, board=board_json)
+        board_str = str(state)
+        move_prompt = self.move_template.format(symbol=self.symbol, board=board_str)
 
         self.conversation_history.append({"role": "user", "content": move_prompt})
 
@@ -34,17 +33,17 @@ class TTTPlayerLLMJson(TTTPlayer):
                 move_row = move_data['move_row']
                 move_col = move_data['move_col']
 
-                move = move_row * 3 + move_col
+                move = self._convert_move(move_row, move_col)
                 if state.board[move] == '':                    
                     print(f"{self.model_name} Thought: {thought}")
                     return move
                 else:
                     print("[BAD-MOVE]", response)
-                    error_message = f"The spot at row {move_row}, column {move_col} is already taken. Please choose an empty spot."
+                    error_message = f"The spot at {move_row} {move_col} is already taken. Please choose an empty spot."
                     self.conversation_history.append({"role": "user", "content": error_message})
             except (json.JSONDecodeError, KeyError):
                 print("[BAD-FORMAT]", response)
-                error_message = "Invalid response format. Please provide a valid JSON object with 'thought', 'move_row', and 'move_col' fields."
+                error_message = "Invalid response format. Please provide a valid JSON object with 'thought', 'move_row' (one of: left, center, right), and 'move_col' (one of: top, middle, bottom) fields."
                 self.conversation_history.append({"role": "user", "content": error_message})
 
     def _get_chat_completion(self) -> str:
@@ -58,9 +57,7 @@ class TTTPlayerLLMJson(TTTPlayer):
 
         return response.choices[0].message.content
 
-    def _board_to_2d_array(self, board: List[str]) -> List[List[str]]:
-        return [
-            board[0:3],
-            board[3:6],
-            board[6:9]
-        ]
+    def _convert_move(self, row: str, col: str) -> int:
+        row_map = {'top': 0, 'middle': 1, 'bottom': 2}
+        col_map = {'left': 0, 'center': 1, 'right': 2}
+        return row_map[row] * 3 + col_map[col]
