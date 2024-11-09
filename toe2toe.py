@@ -1,5 +1,6 @@
 from ttt_core import TTTState
 from ttt_players import TTTPlayerIdeal
+from ttt_llm import TTTPlayerLLMJson
 
 def play_game(player1, player2):
     state = TTTState()
@@ -12,14 +13,11 @@ def play_game(player1, player2):
 
     return state.get_winner()
 
-def simulate_games(num_games):
-    player_x = TTTPlayerIdeal('X')
-    player_o = TTTPlayerIdeal('O')
-    
+def simulate_games(num_games, player1, player2):
     results = {'X': 0, 'O': 0, 'Draw': 0}
 
     for _ in range(num_games):
-        winner = play_game(player_x, player_o)
+        winner = play_game(player1, player2)
         if winner:
             results[winner] += 1
         else:
@@ -28,18 +26,23 @@ def simulate_games(num_games):
     return results
 
 if __name__ == "__main__":
-    num_games = 1000
-    results = simulate_games(num_games)
+    num_games = 10
+    player_ideal = TTTPlayerIdeal('X')
+    player_llm = TTTPlayerLLMJson('O', 'http://100.109.96.89:3333/', 'gpt-4o-mini-2024-07-18', 
+                                  "You are an AI playing Tic-Tac-Toe. Respond with valid JSON.",
+                                  "It's your turn to play. You are '{symbol}'. The current board state is: {board}. Provide your next move as a JSON object with 'thought', 'move_row', and 'move_col' fields.")
 
-    print(f"Results of {num_games} games between two ideal players:")
-    print(f"Player X wins: {results['X']}")
-    print(f"Player O wins: {results['O']}")
+    results = simulate_games(num_games, player_ideal, player_llm)
+
+    print(f"Results of {num_games} games between TTTPlayerIdeal (X) and TTTPlayerLLMJson (O):")
+    print(f"Player X (Ideal) wins: {results['X']}")
+    print(f"Player O (LLM) wins: {results['O']}")
     print(f"Draws: {results['Draw']}")
 
     win_percentage_x = (results['X'] / num_games) * 100
     win_percentage_o = (results['O'] / num_games) * 100
     draw_percentage = (results['Draw'] / num_games) * 100
 
-    print(f"\nWin percentage for Player X: {win_percentage_x:.2f}%")
-    print(f"Win percentage for Player O: {win_percentage_o:.2f}%")
+    print(f"\nWin percentage for Player X (Ideal): {win_percentage_x:.2f}%")
+    print(f"Win percentage for Player O (LLM): {win_percentage_o:.2f}%")
     print(f"Draw percentage: {draw_percentage:.2f}%")
