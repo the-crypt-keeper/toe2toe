@@ -2,15 +2,17 @@ from openai import OpenAI
 from ttt_core import TTTState
 from ttt_players import TTTPlayer
 import json
+from copy import copy
 
 class TTTPlayerLLMJson(TTTPlayer):
-    def __init__(self, model_name: str, api_base: str, system_prompt: str = None, move_template: str = None, api_key: str = 'x-ignored', json_response_mode = False):
+    def __init__(self, model_name: str, api_base: str, system_prompt: str = None, move_template: str = None, api_key: str = 'x-ignored', json_response_mode = False, has_system_role = True):
         super().__init__()
         self.client = OpenAI(api_key=api_key, base_url=api_base)
         self.model_name = model_name
         
         self.system_prompt="You are an AI playing Tic-Tac-Toe. Respond with valid JSON."
         if system_prompt: self.system_prompt = system_prompt
+        self.has_system_role = has_system_role
         
         self.move_template="It's your turn to play. You are '{symbol}'. The current board state is:\n\n{board}\n\nProvide your next move as a JSON object with 'thought', 'move_row' (one of: top, middle, bottom), and 'move_col' (one of: left, center, right) fields."
         if move_template: self.move_template = move_template
@@ -29,12 +31,10 @@ class TTTPlayerLLMJson(TTTPlayer):
     def next_move(self, state: TTTState) -> int:
         board_str = str(state)
         move_prompt = self.move_template.format(symbol=self.symbol, board=board_str)
-
-        self.conversation_history.append({"role": "user", "content": move_prompt})
+        self.conversation_history.append({"role": "user", "content": move_prompt})  
 
         bad_reply_count = 0
         while True:
-            print(board_str)
             response = self._get_chat_completion()
             self.conversation_history.append({"role": "assistant", "content": response})
             
@@ -48,10 +48,11 @@ class TTTPlayerLLMJson(TTTPlayer):
                 move_col = move_data['move_col']
 
                 move = self._convert_move(move_row, move_col)
-                if state.board[move] == '':                    
+                if state.board[move] == '':
                     print(f"{self.model_name} takes {move_row} {move_col}. Thought: {thought}")
                     return move
                 else:
+                    print(board_str)
                     print("[BAD-MOVE]", response)
                     available_moves = self._get_available_moves(state)
                     error_message = f"The spot at {move_row} {move_col} is already taken. Available moves: {available_moves}. Please choose an empty spot."
@@ -69,7 +70,11 @@ class TTTPlayerLLMJson(TTTPlayer):
                 return -1  # Indicate a failed round
 
     def _get_chat_completion(self) -> str:
-        messages = [{"role": "system", "content": self.system_prompt}] + self.conversation_history        
+        if self.has_system_role:
+            messages = [{"role": "system", "content": self.system_prompt}] + self.conversation_history        
+        else:
+            messages = copy(self.conversation_history)
+            messages[0]['content'] = self.system_prompt + '\n\n' + messages[0]['content']
         extra_args = { "response_format": {"type": "json_object"} } if self.json_response_mode else {}
         response = self.client.chat.completions.create(
             model=self.model_name,

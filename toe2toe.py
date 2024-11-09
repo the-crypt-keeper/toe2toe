@@ -59,16 +59,17 @@ def simulate_games(num_games, player1, player2):
     return results
 
 if __name__ == "__main__":
-    num_games = 10
+    num_games = 50
     player_ideal = TTTPlayerIdeal()
     
     player_llm_0 = TTTPlayerLLMJson(
         api_base='http://100.109.96.89:3333/v1/',
-        model_name='Hermes-2-Theta-Llama-3-8B-exl2_65bpw'
+        model_name='Mistral-Nemo-Instruct-2407-Q6_K',
+        has_system_role=False
     )
     player_llm_1 = TTTPlayerLLMJson(
         api_base='http://100.109.96.89:3333/v1/',
-        model_name='gpt-4o-mini-2024-07-18'
+        model_name='Meta-Llama-3.1-8B-Instruct-Q8_0'
     )
 
     results = simulate_games(num_games, player_llm_0, player_llm_1)

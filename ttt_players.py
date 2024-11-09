@@ -9,9 +9,15 @@ class TTTPlayer:
         self.symbol = symbol
                                                                                                                                                                                                                             
     def next_move(self, state: TTTState) -> int:                                                                                                                                                                             
-        raise NotImplementedError("Subclasses must implement next_move method")                                                                                                                                              
+        raise NotImplementedError("Subclasses must implement next_move method")
+    
+    def player_name(self):
+        raise NotImplementedError("Subclasses must implement player_name method")
                                                                                                                                                                                                                               
-class TTTPlayerIdeal(TTTPlayer):                                                                                                                                                                                             
+class TTTPlayerIdeal(TTTPlayer):
+    def player_name(self):
+        return "IdealPlayer"
+        
     def next_move(self, state: TTTState) -> int:
         if self.symbol is None:
             raise ValueError("Player symbol not set. Call new_game() before making moves.")
