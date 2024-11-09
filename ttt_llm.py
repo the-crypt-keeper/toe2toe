@@ -9,10 +9,10 @@ class TTTPlayerLLMJson(TTTPlayer):
         self.client = OpenAI(api_key=api_key, base_url=api_base)
         self.model_name = model_name
         
-        self.system_prompt="You are an AI playing Tic-Tac-Toe. Respond with valid JSON.",
+        self.system_prompt="You are an AI playing Tic-Tac-Toe. Respond with valid JSON."
         if system_prompt: self.system_prompt = system_prompt
         
-        self.move_template="It's your turn to play. You are '{symbol}'. The current board state is:\n\n{board}\n\nProvide your next move as a JSON object with 'thought', 'move_row' (one of: top, middle, bottom), and 'move_col' (one of: left, center, right) fields.",
+        self.move_template="It's your turn to play. You are '{symbol}'. The current board state is:\n\n{board}\n\nProvide your next move as a JSON object with 'thought', 'move_row' (one of: top, middle, bottom), and 'move_col' (one of: left, center, right) fields."
         if move_template: self.move_template = move_template
 
         self.conversation_history = []
