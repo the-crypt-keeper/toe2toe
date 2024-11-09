@@ -39,7 +39,10 @@ class TTTPlayerLLMJson(TTTPlayer):
             self.conversation_history.append({"role": "assistant", "content": response})
             
             try:
-                move_data = json.loads(response)
+                json_start = response.find('{')
+                json_end = response.rfind('}') + 1
+                if json_start != -1 and json_end != -1:
+                    move_data = json.loads(response[json_start:json_end])
                 thought = move_data['thought']
                 move_row = move_data['move_row']
                 move_col = move_data['move_col']
@@ -54,7 +57,7 @@ class TTTPlayerLLMJson(TTTPlayer):
                     error_message = f"The spot at {move_row} {move_col} is already taken. Available moves: {available_moves}. Please choose an empty spot."
                     self.conversation_history.append({"role": "user", "content": error_message})
                     bad_reply_count += 1
-            except (json.JSONDecodeError, KeyError):
+            except (json.JSONDecodeError, KeyError, ValueError):
                 print("[BAD-FORMAT]", response)
                 available_moves = self._get_available_moves(state)
                 error_message = f"Invalid response format. Available moves: {available_moves}. Please provide a valid JSON object with 'thought', 'move_row' (one of: top, middle, bottom), and 'move_col' (one of: left, center, right) fields."
