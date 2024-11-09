@@ -1,7 +1,7 @@
-from typing import List, Tuple
 from openai import OpenAI
 from ttt_core import TTTState
 from ttt_players import TTTPlayer
+import json
 
 class TTTPlayerLLMJson(TTTPlayer):
     def __init__(self, symbol: str, model_name: str, system_prompt: str, move_template: str, api_base: str, api_key: str = 'x-ignored', json_response_mode = True):
@@ -24,6 +24,7 @@ class TTTPlayerLLMJson(TTTPlayer):
         self.conversation_history.append({"role": "user", "content": move_prompt})
 
         while True:
+            print(board_str)
             response = self._get_chat_completion()
             self.conversation_history.append({"role": "assistant", "content": response})
             
@@ -35,7 +36,7 @@ class TTTPlayerLLMJson(TTTPlayer):
 
                 move = self._convert_move(move_row, move_col)
                 if state.board[move] == '':                    
-                    print(f"{self.model_name} Thought: {thought}")
+                    print(f"{self.model_name} takes {move_row} {move_col}. Thought: {thought}")
                     return move
                 else:
                     print("[BAD-MOVE]", response)
