@@ -21,6 +21,10 @@ def simulate_games(num_games, player1, player2):
     results = {'player1': 0, 'player2': 0, 'Draw': 0}
 
     for _ in range(num_games):
+        # Reset players for a new game
+        player1.new_game()
+        player2.new_game()
+
         # Randomly assign X and O
         if random.choice([True, False]):
             player1.symbol, player2.symbol = 'X', 'O'

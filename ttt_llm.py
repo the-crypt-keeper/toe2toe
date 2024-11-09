@@ -14,6 +14,10 @@ class TTTPlayerLLMJson(TTTPlayer):
         self.conversation_history = []
         self.json_response_mode = json_response_mode
 
+    def new_game(self):
+        """Reset conversation history for a new game."""
+        self.conversation_history = []
+
     def next_move(self, state: TTTState) -> int:
         board_json = json.dumps(self._board_to_2d_array(state.board), indent=2)
         move_prompt = self.move_template.format(symbol=self.symbol, board=board_json)

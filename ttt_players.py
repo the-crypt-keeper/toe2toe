@@ -3,6 +3,10 @@ from ttt_core import TTTState
 class TTTPlayer:                                                                                                                                                                                                             
     def __init__(self, symbol):                                                                                                                                                                                              
         self.symbol = symbol                                                                                                                                                                                                 
+
+    def new_game(self):
+        """Reset any game-specific state."""
+        pass
                                                                                                                                                                                                                             
     def next_move(self, state: TTTState) -> int:                                                                                                                                                                             
         raise NotImplementedError("Subclasses must implement next_move method")                                                                                                                                              
