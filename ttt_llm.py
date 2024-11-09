@@ -1,13 +1,13 @@
 import json
 from typing import List
-import openai
+from openai import OpenAI
 from ttt_core import TTTState
 from ttt_players import TTTPlayer
 
 class TTTPlayerLLMJson(TTTPlayer):
-    def __init__(self, symbol: str, api_endpoint: str, model_name: str, system_prompt: str, move_template: str):
+    def __init__(self, symbol: str, api_key: str, model_name: str, system_prompt: str, move_template: str):
         super().__init__(symbol)
-        self.api_endpoint = api_endpoint
+        self.client = OpenAI(api_key=api_key)
         self.model_name = model_name
         self.system_prompt = system_prompt
         self.move_template = move_template
@@ -41,10 +41,9 @@ class TTTPlayerLLMJson(TTTPlayer):
 
     def _get_chat_completion(self) -> str:
         messages = [{"role": "system", "content": self.system_prompt}] + self.conversation_history
-        response = openai.ChatCompletion.create(
+        response = self.client.chat.completions.create(
             model=self.model_name,
             messages=messages,
-            api_base=self.api_endpoint,
             response_format={"type": "json_object"}
         )
         return response.choices[0].message.content
