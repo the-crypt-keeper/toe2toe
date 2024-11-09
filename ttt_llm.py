@@ -17,6 +17,9 @@ class TTTPlayerLLMJson(TTTPlayer):
 
         self.conversation_history = []
         self.json_response_mode = json_response_mode
+        
+    def player_name(self):
+        return self.model_name
 
     def new_game(self, symbol: str):
         """Reset conversation history for a new game and set the player's symbol."""
