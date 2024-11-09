@@ -9,6 +9,9 @@ def play_game(player_x, player_o):
 
     while not state.is_game_over():
         move = current_player.next_move(state)
+        if move == -1:
+            print(f"Player {current_player.symbol} failed to make a valid move. Game over.")
+            return 'F' if current_player == player_x else 'f'
         state.make_move(move)
         current_player = player_o if current_player == player_x else player_x
         
@@ -18,7 +21,7 @@ def play_game(player_x, player_o):
     return state.get_winner()
 
 def simulate_games(num_games, player1, player2):
-    results = {'player1': 0, 'player2': 0, 'Draw': 0}
+    results = {'player1': 0, 'player2': 0, 'Draw': 0, 'player1_failure': 0, 'player2_failure': 0}
 
     for _ in range(num_games):
         # Reset players for a new game
@@ -37,6 +40,10 @@ def simulate_games(num_games, player1, player2):
             results['player1'] += 1
         elif winner == player2.symbol:
             results['player2'] += 1
+        elif winner == 'F':
+            results['player1_failure'] += 1
+        elif winner == 'f':
+            results['player2_failure'] += 1
         else:
             results['Draw'] += 1
 
@@ -60,11 +67,18 @@ if __name__ == "__main__":
     print(f"TTTPlayerIdeal wins: {results['player1']}")
     print(f"TTTPlayerLLMJson wins: {results['player2']}")
     print(f"Draws: {results['Draw']}")
+    print(f"TTTPlayerIdeal failures: {results['player1_failure']}")
+    print(f"TTTPlayerLLMJson failures: {results['player2_failure']}")
 
-    win_percentage_ideal = (results['player1'] / num_games) * 100
-    win_percentage_llm = (results['player2'] / num_games) * 100
-    draw_percentage = (results['Draw'] / num_games) * 100
+    total_valid_games = num_games - results['player1_failure'] - results['player2_failure']
+    win_percentage_ideal = (results['player1'] / total_valid_games) * 100 if total_valid_games > 0 else 0
+    win_percentage_llm = (results['player2'] / total_valid_games) * 100 if total_valid_games > 0 else 0
+    draw_percentage = (results['Draw'] / total_valid_games) * 100 if total_valid_games > 0 else 0
+    failure_percentage_ideal = (results['player1_failure'] / num_games) * 100
+    failure_percentage_llm = (results['player2_failure'] / num_games) * 100
 
     print(f"\nWin percentage for TTTPlayerIdeal: {win_percentage_ideal:.2f}%")
     print(f"Win percentage for TTTPlayerLLMJson: {win_percentage_llm:.2f}%")
     print(f"Draw percentage: {draw_percentage:.2f}%")
+    print(f"Failure percentage for TTTPlayerIdeal: {failure_percentage_ideal:.2f}%")
+    print(f"Failure percentage for TTTPlayerLLMJson: {failure_percentage_llm:.2f}%")
