@@ -30,6 +30,7 @@ class TTTPlayerLLMJson(TTTPlayer):
                 move = move_row * 3 + move_col
                 if state.board[move] == '':
                     self.conversation_history.append({"role": "assistant", "content": response})
+                    print(f"{self.model_name} Thought: {thought}")
                     return move
                 else:
                     error_message = f"The spot at row {move_row}, column {move_col} is already taken. Please choose an empty spot."
