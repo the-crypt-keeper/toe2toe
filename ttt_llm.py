@@ -4,7 +4,7 @@ from ttt_players import TTTPlayer
 import json
 
 class TTTPlayerLLMJson(TTTPlayer):
-    def __init__(self, model_name: str, system_prompt: str, move_template: str, api_base: str, api_key: str = 'x-ignored', json_response_mode = False):
+    def __init__(self, model_name: str, api_base: str, system_prompt: str = None, move_template: str = None, api_key: str = 'x-ignored', json_response_mode = False):
         super().__init__()
         self.client = OpenAI(api_key=api_key, base_url=api_base)
         self.model_name = model_name
