@@ -55,10 +55,7 @@ if __name__ == "__main__":
     player_llm = TTTPlayerLLMJson(
         symbol='O',
         api_base='http://100.109.96.89:3333/v1/',
-        model_name='Hermes-2-Theta-Llama-3-8B-exl2_65bpw',
-        system_prompt="You are an AI playing Tic-Tac-Toe. Respond with valid JSON.",
-        move_template="It's your turn to play. You are '{symbol}'. The current board state is:\n\n{board}\n\nProvide your next move as a JSON object with 'thought', 'move_row' (one of: top, middle, bottom), and 'move_col' (one of: left, center, right) fields.",
-        json_response_mode=False
+        model_name='Hermes-2-Theta-Llama-3-8B-exl2_65bpw'
     )
 
     results = simulate_games(num_games, player_ideal, player_llm)
