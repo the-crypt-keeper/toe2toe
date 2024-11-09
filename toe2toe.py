@@ -24,16 +24,14 @@ def simulate_games(num_games, player1, player2):
     results = {'player1': 0, 'player2': 0, 'Draw': 0, 'player1_failure': 0, 'player2_failure': 0}
 
     for _ in range(num_games):
-        # Reset players for a new game
-        player1.new_game()
-        player2.new_game()
-
         # Randomly assign X and O
         if random.choice([True, False]):
-            player1.symbol, player2.symbol = 'X', 'O'
+            player1.new_game('X')
+            player2.new_game('O')
             winner = play_game(player1, player2)
         else:
-            player1.symbol, player2.symbol = 'O', 'X'
+            player1.new_game('O')
+            player2.new_game('X')
             winner = play_game(player2, player1)
 
         if winner == player1.symbol:
@@ -51,9 +49,8 @@ def simulate_games(num_games, player1, player2):
 
 if __name__ == "__main__":
     num_games = 10
-    player_ideal = TTTPlayerIdeal('X')  # Initial symbol, will be changed in each game
+    player_ideal = TTTPlayerIdeal()
     player_llm = TTTPlayerLLMJson(
-        symbol='O',
         api_base='http://100.109.96.89:3333/v1/',
         model_name='Hermes-2-Theta-Llama-3-8B-exl2_65bpw'
     )

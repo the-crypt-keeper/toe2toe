@@ -4,8 +4,8 @@ from ttt_players import TTTPlayer
 import json
 
 class TTTPlayerLLMJson(TTTPlayer):
-    def __init__(self, symbol: str, model_name: str, system_prompt: str, move_template: str, api_base: str, api_key: str = 'x-ignored', json_response_mode = False):
-        super().__init__(symbol)
+    def __init__(self, model_name: str, system_prompt: str, move_template: str, api_base: str, api_key: str = 'x-ignored', json_response_mode = False):
+        super().__init__()
         self.client = OpenAI(api_key=api_key, base_url=api_base)
         self.model_name = model_name
         
@@ -18,8 +18,9 @@ class TTTPlayerLLMJson(TTTPlayer):
         self.conversation_history = []
         self.json_response_mode = json_response_mode
 
-    def new_game(self):
-        """Reset conversation history for a new game."""
+    def new_game(self, symbol: str):
+        """Reset conversation history for a new game and set the player's symbol."""
+        super().new_game(symbol)
         self.conversation_history = []
 
     def next_move(self, state: TTTState) -> int:

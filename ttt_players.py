@@ -1,18 +1,21 @@
 from ttt_core import TTTState                                                                                                                                                                                                
                                                                                                                                                                                                                               
 class TTTPlayer:                                                                                                                                                                                                             
-    def __init__(self, symbol):                                                                                                                                                                                              
-        self.symbol = symbol                                                                                                                                                                                                 
+    def __init__(self):                                                                                                                                                                                              
+        self.symbol = None                                                                                                                                                                                                 
 
-    def new_game(self):
-        """Reset any game-specific state."""
-        pass
+    def new_game(self, symbol):
+        """Reset any game-specific state and set the player's symbol."""
+        self.symbol = symbol
                                                                                                                                                                                                                             
     def next_move(self, state: TTTState) -> int:                                                                                                                                                                             
         raise NotImplementedError("Subclasses must implement next_move method")                                                                                                                                              
                                                                                                                                                                                                                               
 class TTTPlayerIdeal(TTTPlayer):                                                                                                                                                                                             
-    def next_move(self, state: TTTState) -> int:                                                                                                                                                                             
+    def next_move(self, state: TTTState) -> int:
+        if self.symbol is None:
+            raise ValueError("Player symbol not set. Call new_game() before making moves.")
+                                                                                                                                                                                             
         # Check for winning move                                                                                                                                                                                             
         winning_move = self._find_winning_move(state, self.symbol)                                                                                                                                                           
         if winning_move is not None:                                                                                                                                                                                         
